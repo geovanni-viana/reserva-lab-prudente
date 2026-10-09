@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Reserva do Laboratório de Informática Escola Prudente</title>
+  <meta name="description" content="Reserva de horários do laboratório de informática da Escola Prudente." />
+  <meta name="theme-color" content="#0B1220" />
+  <script>
+    (function () {
+      try {
+        var tema = localStorage.getItem("prudente_tema");
+        if (tema === "claro") document.documentElement.setAttribute("data-tema", "claro");
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="scanline-overlay" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="topbar__logo">⌁</span>
+      <div>
+        <h1>Reserva do Laboratório de Informática</h1>
+        <p>Escola Prudente</p>
+      </div>
+    </div>
+    <div class="topbar__direita">
+      <div class="topbar__legenda">
+        <span class="legenda-item"><i class="dot dot--tarde"></i>Livre</span>
+        <span class="legenda-item"><i class="dot dot--manha"></i>Reservado</span>
+      </div>
+      <button type="button" id="btn-tema" class="btn-tema" aria-label="Alternar modo claro/escuro" title="Alternar tema">
+        <span class="btn-tema__icone" aria-hidden="true">☾</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Painel esquerdo: console de cadastro -->
+    <section class="console" aria-labelledby="form-titulo">
+      <div class="console__header">
+        <span class="console__cursor">&gt;_</span>
+        <h2 id="form-titulo">Nova reserva</h2>
+      </div>
+
+      <form id="form-agendamento" class="console__form" novalidate>
+        <p id="form-erro" class="form-erro" role="alert" hidden></p>
+
+        <label class="campo">
+          <span>Professor(a)</span>
+          <input id="input-professor" type="text" placeholder="Nome do(a) professor(a)" autocomplete="off" required />
+        </label>
+
+        <label class="campo">
+          <span>Disciplina</span>
+          <input id="input-disciplina" type="text" placeholder="Ex.: Matemática" autocomplete="off" required />
+        </label>
+
+        <label class="campo">
+          <span>Turma <em>(opcional)</em></span>
+          <input id="input-turma" type="text" placeholder="Ex.: Turma 81" autocomplete="off" />
+        </label>
+
+        <div class="campo-grupo">
+          <label class="campo">
+            <span>Data</span>
+            <input id="input-data" type="date" required />
+          </label>
+
+          <label class="campo">
+            <span>Horário</span>
+            <select id="input-periodo" required></select>
+          </label>
+        </div>
+
+        <label class="campo">
+          <span>Observações <em>(opcional)</em></span>
+          <textarea id="input-observacoes" rows="2" placeholder="Programas necessários, nº de computadores, etc."></textarea>
+        </label>
+
+        <div class="console__acoes">
+          <button type="submit" id="btn-submit" class="btn btn--primario">Agendar aula</button>
+          <button type="button" id="btn-cancelar-edicao" class="btn btn--fantasma" hidden>Cancelar edição</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Painel direito: grade + agenda -->
+    <section class="painel-direito">
+      <div class="patch-panel">
+        <div class="patch-panel__header">
+          <h2>Painel de reservas</h2>
+          <div class="week-nav">
+            <button type="button" id="week-prev" class="btn-icon" aria-label="Semana anterior">‹</button>
+            <span id="week-label" class="week-label"></span>
+            <button type="button" id="week-next" class="btn-icon" aria-label="Próxima semana">›</button>
+            <button type="button" id="week-today" class="btn btn--fantasma btn--pequeno">Hoje</button>
+          </div>
+        </div>
+        <div class="patch-grid-wrap">
+          <div id="patch-grid" class="patch-grid" role="table" aria-label="Grade semanal de ocupação do laboratório"></div>
+        </div>
+      </div>
+
+      <div class="agenda">
+        <div class="agenda__header">
+          <h2>Próximas aulas <span id="contador-agenda" class="badge">0</span></h2>
+          <input id="input-busca" type="search" placeholder="Buscar professor ou disciplina…" />
+        </div>
+        <ul id="lista-agenda" class="agenda__lista"></ul>
+        <p id="estado-vazio" class="estado-vazio" hidden>
+          Nenhuma aula agendada. O laboratório está livre — que tal reservar um horário?
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
